@@ -197,7 +197,91 @@
             </div>
         </article>
 
+<div class="technical-example">
 
+    <div class="example-header">
+        <span>systemd timer</span>
+        <span>sanitized example</span>
+    </div>
+
+    <pre><code>[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=15m
+
+[Install]
+WantedBy=timers.target</code></pre>
+
+    <div class="example-explanation">
+        <p>
+            <strong>Persistent=true</strong> allows a missed scheduled run to
+            execute after the server becomes available again.
+        </p>
+
+        <p>
+            <strong>RandomizedDelaySec</strong> prevents every scheduled backup
+            job from starting at exactly the same moment.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="technical-example">
+
+    <div class="example-header">
+        <span>Bash</span>
+        <span>mount safety check</span>
+    </div>
+
+    <pre><code>BACKUP_ROOT="/mnt/backups"
+
+if ! mountpoint -q "$BACKUP_ROOT"; then
+    echo "Backup filesystem is not mounted." >&amp;2
+    exit 1
+fi</code></pre>
+
+    <div class="example-explanation">
+        <p>
+            Before writing anything, the script verifies that the external
+            backup filesystem is actually mounted.
+        </p>
+
+        <p>
+            Without this guard, a missing external disk could cause data to be
+            written into the empty mount directory on the server's root
+            filesystem instead.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="technical-example">
+
+    <div class="example-header">
+        <span>SQLite</span>
+        <span>database validation</span>
+    </div>
+
+    <pre><code>sqlite3 "$SOURCE_DB" ".backup '$BACKUP_DB'"
+
+RESULT=$(sqlite3 "$BACKUP_DB" "PRAGMA integrity_check;")
+
+if [ "$RESULT" != "ok" ]; then
+    echo "Database integrity check failed." >&amp;2
+    exit 1
+fi</code></pre>
+
+    <div class="example-explanation">
+        <p>
+            SQLite's backup mechanism creates a consistent snapshot of an
+            active database. The resulting copy is then checked before the
+            backup job is considered successful.
+        </p>
+    </div>
+
+</div>
         <article class="case-section">
             <p class="eyebrow">VALIDATION</p>
             <h2>Testing the unhappy path.</h2>

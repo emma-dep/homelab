@@ -1090,3 +1090,34 @@ a {
     }
 
 }
+
+/* ---------- Contact ---------- */
+
+.contact-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 7rem 2rem;
+
+    text-align: center;
+
+    border-top: 1px solid var(--border);
+}
+
+.contact-section h2 {
+    margin: 0.5rem auto 1rem;
+
+    font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.contact-section > p:not(.eyebrow) {
+    max-width: 650px;
+    margin: 0 auto;
+
+    color: var(--text-muted);
+    line-height: 1.8;
+}
+
+.contact-section .hero-actions {
+    justify-content: center;
+    margin-top: 2rem;
+}

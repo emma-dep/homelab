@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Emma's homelab portfolio — Linux infrastructure, self-hosting, networking, monitoring, automation and disaster recovery."
+    >
+
+    <title>Emma // Homelab</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="site-header">
+        <nav class="navbar">
+            <a class="logo" href="#home">EMMA // HOMELAB</a>
+
+            <div class="nav-links">
+                <a href="#infrastructure">Infrastructure</a>
+                <a href="#projects">Projects</a>
+                <a href="#technologies">Technologies</a>
+                <a href="https://github.com/emma-dep">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+
+        <!-- Hero -->
+        <section class="hero" id="home">
+
+            <p class="eyebrow">SELF-HOSTED INFRASTRUCTURE</p>
+
+            <h1>
+                Linux infrastructure
+                <span>built from the ground up.</span>
+            </h1>
+
+            <p class="hero-description">
+                A personal homelab for experimenting with Linux administration,
+                networking, containers, monitoring, automation, security and
+                disaster recovery.
+            </p>
+
+            <div class="hero-actions">
+                <a class="button primary" href="#projects">
+                    Explore projects
+                </a>
+
+                <a
+                    class="button secondary"
+                    href="https://github.com/emma-dep"
+                >
+                    View GitHub
+                </a>
+            </div>
+
+        </section>
+
+
+        <!-- Infrastructure -->
+        <section class="section" id="infrastructure">
+
+            <div class="section-heading">
+                <p class="eyebrow">INFRASTRUCTURE</p>
+                <h2>Three systems. Different jobs.</h2>
+
+                <p>
+                    Services are distributed across dedicated systems rather than
+                    running everything on a single host.
+                </p>
+            </div>
+
+
+            <div class="server-grid">
+
+                <article class="server-card">
+                    <p class="server-role">CORE SERVICES</p>
+                    <h3>Pandora</h3>
+                    <p>Linux Mint server</p>
+
+                    <ul>
+                        <li>Jellyfin</li>
+                        <li>Pi-hole</li>
+                        <li>Vaultwarden</li>
+                        <li>Caddy</li>
+                        <li>Home Assistant</li>
+                        <li>Whisper</li>
+                        <li>Piper</li>
+                    </ul>
+                </article>
+
+
+                <article class="server-card">
+                    <p class="server-role">MONITORING</p>
+                    <h3>Demeter</h3>
+                    <p>Debian server</p>
+
+                    <ul>
+                        <li>Uptime Kuma</li>
+                        <li>ntfy</li>
+                        <li>Docker</li>
+                        <li>Centralized monitoring</li>
+                        <li>Push alerting</li>
+                    </ul>
+                </article>
+
+
+                <article class="server-card">
+                    <p class="server-role">WORKSTATION</p>
+                    <h3>Artemis</h3>
+                    <p>Fedora workstation</p>
+
+                    <ul>
+                        <li>Sonarr</li>
+                        <li>Prowlarr</li>
+                        <li>qBittorrent</li>
+                        <li>FlareSolverr</li>
+                        <li>Administration</li>
+                        <li>Development</li>
+                    </ul>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Projects -->
+        <section class="section" id="projects">
+
+            <div class="section-heading">
+                <p class="eyebrow">CASE STUDIES</p>
+                <h2>Things I've built.</h2>
+
+                <p>
+                    Practical infrastructure projects built to solve real
+                    problems in my homelab.
+                </p>
+            </div>
+
+
+            <div class="project-grid">
+
+                <article class="project-card">
+                    <p class="project-number">01</p>
+                    <h3>Backup & Disaster Recovery</h3>
+
+                    <p>
+                        Automated backups for critical services using Bash,
+                        systemd timers, SQLite integrity verification and
+                        failure notifications.
+                    </p>
+
+                    <span>Linux · Bash · systemd · SQLite</span>
+                </article>
+
+
+                <article class="project-card">
+                    <p class="project-number">02</p>
+                    <h3>Monitoring & Alerting</h3>
+
+                    <p>
+                        Independent service monitoring with Uptime Kuma and
+                        authenticated push notifications through ntfy.
+                    </p>
+
+                    <span>Docker · Uptime Kuma · ntfy</span>
+                </article>
+
+
+                <article class="project-card">
+                    <p class="project-number">03</p>
+                    <h3>Private Password Infrastructure</h3>
+
+                    <p>
+                        Self-hosted Vaultwarden deployment protected by HTTPS,
+                        private DNS and an internally managed certificate
+                        authority.
+                    </p>
+
+                    <span>Docker · Vaultwarden · Caddy · DNS</span>
+                </article>
+
+
+                <article class="project-card">
+                    <p class="project-number">04</p>
+                    <h3>Home Automation & Local Voice</h3>
+
+                    <p>
+                        Home Assistant with locally hosted speech recognition
+                        and text-to-speech services.
+                    </p>
+
+                    <span>Home Assistant · Whisper · Piper · Docker</span>
+                </article>
+
+
+                <article class="project-card">
+                    <p class="project-number">05</p>
+                    <h3>Media Infrastructure</h3>
+
+                    <p>
+                        Self-hosted media streaming with separate management
+                        and automation services.
+                    </p>
+
+                    <span>Jellyfin · Sonarr · Prowlarr · qBittorrent</span>
+                </article>
+
+
+                <article class="project-card">
+                    <p class="project-number">06</p>
+                    <h3>Networking & DNS</h3>
+
+                    <p>
+                        Local DNS, static addressing, network-wide filtering,
+                        firewall configuration and internal service discovery.
+                    </p>
+
+                    <span>Pi-hole · DNS · UFW · Linux networking</span>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Technologies -->
+        <section class="section" id="technologies">
+
+            <div class="section-heading">
+                <p class="eyebrow">TECHNOLOGIES</p>
+                <h2>Tools I work with.</h2>
+            </div>
+
+            <div class="technology-list">
+                <span>Linux</span>
+                <span>Fedora</span>
+                <span>Debian</span>
+                <span>Linux Mint</span>
+                <span>Docker</span>
+                <span>systemd</span>
+                <span>Bash</span>
+                <span>SSH</span>
+                <span>Git</span>
+                <span>DNS</span>
+                <span>Caddy</span>
+                <span>SQLite</span>
+                <span>UFW</span>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>Built and maintained by Emma.</p>
+
+        <a href="https://github.com/emma-dep">
+            github.com/emma-dep
+        </a>
+    </footer>
+
+
+    <script src="assets/js/main.js"></script>
+
+</body>
+</html>

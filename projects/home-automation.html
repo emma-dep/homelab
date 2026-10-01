@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Local Home Assistant and voice-processing infrastructure in Emma's Linux homelab."
+    >
+
+    <title>Home Automation & Local Voice // Emma's Homelab</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <a class="logo" href="../index.html">EMMA // HOMELAB</a>
+
+        <div class="nav-links">
+            <a href="../index.html#infrastructure">Infrastructure</a>
+            <a href="../index.html#projects">Projects</a>
+            <a href="https://github.com/emma-dep">GitHub</a>
+        </div>
+    </nav>
+</header>
+
+
+<main>
+
+<section class="case-hero">
+
+    <a class="back-link" href="../index.html#projects">
+        ← Back to projects
+    </a>
+
+    <p class="eyebrow">CASE STUDY 04</p>
+
+    <h1>Home Automation &<br>Local Voice</h1>
+
+    <p class="case-intro">
+        A self-hosted Home Assistant environment with local speech recognition,
+        text-to-speech and custom functionality running on my own Linux
+        infrastructure.
+    </p>
+
+    <div class="case-tags">
+        <span>Home Assistant</span>
+        <span>Docker</span>
+        <span>Whisper</span>
+        <span>Piper</span>
+        <span>Python</span>
+        <span>Linux</span>
+    </div>
+
+</section>
+
+
+<section class="case-content">
+
+    <article class="case-section">
+        <p class="eyebrow">THE GOAL</p>
+
+        <h2>Build an assistant I can actually extend.</h2>
+
+        <p>
+            I wanted Home Assistant to become more than a dashboard for
+            devices. The goal was to create a locally hosted assistant whose
+            speech pipeline and custom functionality I could understand,
+            modify and integrate with the rest of my homelab.
+        </p>
+
+        <p>
+            Keeping the core voice-processing components local also gave me an
+            opportunity to experiment with speech infrastructure without making
+            cloud services a requirement for the basic pipeline.
+        </p>
+    </article>
+
+
+    <article class="case-section">
+        <p class="eyebrow">ARCHITECTURE</p>
+
+        <h2>Speech enters, an intent comes out.</h2>
+
+        <div class="design-flow">
+
+            <div>
+                <strong>Voice Input</strong>
+                <span>Spoken command</span>
+            </div>
+
+            <b>→</b>
+
+            <div>
+                <strong>Whisper</strong>
+                <span>Speech to text</span>
+            </div>
+
+            <b>→</b>
+
+            <div>
+                <strong>Home Assistant</strong>
+                <span>Intent & automation</span>
+            </div>
+
+        </div>
+
+        <div class="design-flow">
+
+            <div>
+                <strong>Home Assistant</strong>
+                <span>Response</span>
+            </div>
+
+            <b>→</b>
+
+            <div>
+                <strong>Piper</strong>
+                <span>Text to speech</span>
+            </div>
+
+            <b>→</b>
+
+            <div>
+                <strong>Client</strong>
+                <span>Spoken response</span>
+            </div>
+
+        </div>
+
+        <p>
+            Home Assistant, Whisper and Piper run as separate containerized
+            services on Pandora. The components communicate over the local
+            infrastructure while keeping persistent Home Assistant
+            configuration outside the container lifecycle.
+        </p>
+    </article>
+
+
+    <article class="case-section">
+        <p class="eyebrow">IMPLEMENTATION</p>
+
+        <h2>Separate components with clear responsibilities.</h2>
+
+        <div class="feature-list">
+
+            <div class="feature">
+                <span>01</span>
+                <div>
+                    <h3>Home Assistant</h3>
+                    <p>
+                        Home Assistant provides the central automation and
+                        intent layer while maintaining persistent configuration
+                        on the host.
+                    </p>
+                </div>
+            </div>
+
+            <div class="feature">
+                <span>02</span>
+                <div>
+                    <h3>Local speech recognition</h3>
+                    <p>
+                        Whisper provides speech-to-text processing as a
+                        dedicated service rather than embedding recognition
+                        directly into the Home Assistant container.
+                    </p>
+                </div>
+            </div>
+
+            <div class="feature">
+                <span>03</span>
+                <div>
+                    <h3>Local text-to-speech</h3>
+                    <p>
+                        Piper provides locally hosted speech synthesis for
+                        generated responses.
+                    </p>
+                </div>
+            </div>
+
+            <div class="feature">
+                <span>04</span>
+                <div>
+                    <h3>Containerized deployment</h3>
+                    <p>
+                        The application stack is managed through Docker,
+                        separating individual services while keeping deployment
+                        reproducible and easier to troubleshoot.
+                    </p>
+                </div>
+            </div>
+
+            <div class="feature">
+                <span>05</span>
+                <div>
+                    <h3>Persistent configuration</h3>
+                    <p>
+                        Home Assistant configuration is stored outside the
+                        application container and is included in the homelab's
+                        automated backup system.
+                    </p>
+                </div>
+            </div>
+
+            <div class="feature">
+                <span>06</span>
+                <div>
+                    <h3>Custom integration development</h3>
+                    <p>
+                        I began extending Home Assistant with a custom reminder
+                        integration, including configuration-flow and intent
+                        handling components rather than relying exclusively on
+                        existing integrations.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </article>
+
+
+    <article class="case-section">
+        <p class="eyebrow">CUSTOM DEVELOPMENT</p>
+
+        <h2>Moving from configuration to code.</h2>
+
+        <p>
+            One of the goals of the project is voice-created reminders. I began
+            implementing this as a custom Home Assistant component, separating
+            integration setup, constants and intent handling into individual
+            Python modules.
+        </p>
+
+        <p>
+            This turned the project into more than a deployment exercise:
+            Home Assistant became a platform I could extend with my own
+            functionality.
+        </p>
+    </article>
+
+
+    <article class="case-section">
+        <p class="eyebrow">OPERATIONS</p>
+
+        <h2>The assistant is part of the infrastructure.</h2>
+
+        <p>
+            The Home Assistant configuration is covered by the same backup
+            strategy as other important services. Its SQLite database is backed
+            up consistently and checked for integrity rather than being copied
+            blindly while active.
+        </p>
+
+        <p>
+            Treating the application as part of the wider homelab also means
+            thinking about persistence, recovery and service dependencies
+            rather than only whether the UI currently loads.
+        </p>
+    </article>
+
+
+    <article class="case-section">
+        <p class="eyebrow">CURRENT DEVELOPMENT</p>
+
+        <h2>The project is deliberately unfinished.</h2>
+
+        <p>
+            The current stack provides the foundation for local voice
+            processing and custom Home Assistant development. The next stage is
+            completing and validating the reminder workflow and improving the
+            client experience around voice interaction.
+        </p>
+
+        <p>
+            I document unfinished work explicitly because distinguishing
+            deployed functionality from planned functionality is important
+            when operating real systems.
+        </p>
+    </article>
+
+
+    <article class="case-section">
+        <p class="eyebrow">WHAT I LEARNED</p>
+
+        <h2>Self-hosting becomes much more interesting when you build on it.</h2>
+
+        <p>
+            This project connected container administration with application
+            configuration, local AI services and Python development.
+        </p>
+
+        <p>
+            It also reinforced the value of separating components by
+            responsibility: speech recognition, automation logic and speech
+            synthesis can be operated and troubleshot independently.
+        </p>
+    </article>
+
+</section>
+
+</main>
+
+
+<footer class="site-footer">
+    <p>Built and maintained by Emma.</p>
+    <a href="https://github.com/emma-dep">github.com/emma-dep</a>
+</footer>
+
+</body>
+</html>

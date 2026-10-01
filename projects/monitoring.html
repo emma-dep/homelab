@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Independent monitoring and alerting infrastructure for Emma's Linux homelab."
+    >
+
+    <title>Monitoring & Alerting // Emma's Homelab</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <a class="logo" href="../index.html">EMMA // HOMELAB</a>
+
+        <div class="nav-links">
+            <a href="../index.html#infrastructure">Infrastructure</a>
+            <a href="../index.html#projects">Projects</a>
+            <a href="https://github.com/emma-dep">GitHub</a>
+        </div>
+    </nav>
+</header>
+
+
+<main>
+
+    <section class="case-hero">
+
+        <a class="back-link" href="../index.html#projects">
+            ← Back to projects
+        </a>
+
+        <p class="eyebrow">CASE STUDY 03</p>
+
+        <h1>Monitoring &<br>Alerting</h1>
+
+        <p class="case-intro">
+            Independent infrastructure monitoring using a dedicated Debian
+            server, Uptime Kuma and authenticated ntfy push notifications.
+        </p>
+
+        <div class="case-tags">
+            <span>Debian</span>
+            <span>Docker</span>
+            <span>Uptime Kuma</span>
+            <span>ntfy</span>
+            <span>DNS</span>
+            <span>Linux</span>
+        </div>
+
+    </section>
+
+
+    <section class="case-content">
+
+        <article class="case-section">
+            <p class="eyebrow">THE PROBLEM</p>
+            <h2>A failed service is useless if nobody notices.</h2>
+
+            <p>
+                As the homelab grew, checking individual services manually
+                stopped being practical. Core infrastructure could fail while
+                appearing normal until I happened to use the affected service.
+            </p>
+
+            <p>
+                I wanted centralized monitoring that could detect failures
+                across multiple machines and notify me without depending on the
+                same host being monitored.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">ARCHITECTURE</p>
+            <h2>Monitoring lives outside the systems it watches.</h2>
+
+            <div class="design-flow">
+
+                <div>
+                    <strong>Pandora</strong>
+                    <span>Core services</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>Demeter</strong>
+                    <span>Uptime Kuma</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>ntfy</strong>
+                    <span>Push notifications</span>
+                </div>
+
+            </div>
+
+            <p>
+                Demeter is a separate headless Debian system dedicated to
+                monitoring and notifications. This means a failure of a service
+                on Pandora does not automatically remove the system responsible
+                for detecting that failure.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">IMPLEMENTATION</p>
+            <h2>Monitoring several layers of the lab.</h2>
+
+            <div class="feature-list">
+
+                <div class="feature">
+                    <span>01</span>
+                    <div>
+                        <h3>Host availability</h3>
+                        <p>
+                            Ping monitors check whether important machines are
+                            reachable on the network, providing a basic
+                            distinction between host failure and individual
+                            application failure.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>02</span>
+                    <div>
+                        <h3>Application monitoring</h3>
+                        <p>
+                            HTTP monitors check services including Jellyfin,
+                            Vaultwarden, Sonarr, Prowlarr and qBittorrent rather
+                            than assuming a reachable host means its
+                            applications are healthy.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>03</span>
+                    <div>
+                        <h3>DNS monitoring</h3>
+                        <p>
+                            DNS resolution is tested independently against the
+                            local resolver, allowing failures in internal name
+                            resolution to be detected separately from web
+                            services.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>04</span>
+                    <div>
+                        <h3>Authenticated notifications</h3>
+                        <p>
+                            ntfy uses authenticated access rather than an
+                            anonymously writable notification topic.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>05</span>
+                    <div>
+                        <h3>Mobile delivery</h3>
+                        <p>
+                            Alerts are delivered to my phone so infrastructure
+                            failures become visible without repeatedly checking
+                            the monitoring dashboard.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>06</span>
+                    <div>
+                        <h3>Persistent containers</h3>
+                        <p>
+                            Monitoring services run through Docker with
+                            persistent application data and automatically
+                            recover across normal host reboots.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">INTEGRATION</p>
+            <h2>One notification service, multiple failure sources.</h2>
+
+            <p>
+                ntfy is not limited to Uptime Kuma. Pandora's backup system
+                independently sends authenticated failure notifications to the
+                ntfy instance running on Demeter.
+            </p>
+
+            <p>
+                This gives the lab a reusable notification layer: monitoring
+                software can report service outages while systemd can report
+                failed infrastructure jobs through the same destination.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">SECURITY</p>
+            <h2>Monitoring shouldn't become another exposed service.</h2>
+
+            <p>
+                Incoming firewall access to Demeter's management and monitoring
+                services is restricted to the local network. ntfy requires
+                authentication, and credentials are stored outside the public
+                portfolio repository.
+            </p>
+
+            <p>
+                Internal addresses, credentials and other operational details
+                are intentionally omitted from this public documentation.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">WHAT I LEARNED</p>
+            <h2>“The server is up” doesn't mean the service is healthy.</h2>
+
+            <p>
+                Building the monitoring system made the distinction between
+                host availability, application availability and supporting
+                infrastructure much clearer.
+            </p>
+
+            <p>
+                It also demonstrated why monitoring should be designed with
+                failure domains in mind. Separating monitoring from the main
+                application server makes it much more useful when that server
+                is the thing that breaks.
+            </p>
+        </article>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+    <p>Built and maintained by Emma.</p>
+    <a href="https://github.com/emma-dep">github.com/emma-dep</a>
+</footer>
+
+</body>
+</html>

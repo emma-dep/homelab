@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Private Vaultwarden, DNS and HTTPS infrastructure in Emma's Linux homelab."
+    >
+
+    <title>Private Password Infrastructure // Emma's Homelab</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <a class="logo" href="../index.html">EMMA // HOMELAB</a>
+
+        <div class="nav-links">
+            <a href="../index.html#infrastructure">Infrastructure</a>
+            <a href="../index.html#projects">Projects</a>
+            <a href="https://github.com/emma-dep">GitHub</a>
+        </div>
+    </nav>
+</header>
+
+
+<main>
+
+    <section class="case-hero">
+
+        <a class="back-link" href="../index.html#projects">
+            ← Back to projects
+        </a>
+
+        <p class="eyebrow">CASE STUDY 02</p>
+
+        <h1>Private Password<br>Infrastructure</h1>
+
+        <p class="case-intro">
+            A self-hosted Vaultwarden deployment using containers, private DNS
+            and internally trusted HTTPS while keeping the service restricted
+            to my own infrastructure.
+        </p>
+
+        <div class="case-tags">
+            <span>Vaultwarden</span>
+            <span>Docker</span>
+            <span>Caddy</span>
+            <span>Pi-hole</span>
+            <span>DNS</span>
+            <span>TLS</span>
+        </div>
+
+    </section>
+
+
+    <section class="case-content">
+
+        <article class="case-section">
+            <p class="eyebrow">THE PROBLEM</p>
+            <h2>Self-hosting passwords without sacrificing HTTPS.</h2>
+
+            <p>
+                I wanted to migrate my password vault from a hosted Bitwarden
+                account to infrastructure under my own control while preserving
+                encrypted HTTPS access for clients on my local network.
+            </p>
+
+            <p>
+                The challenge was not simply running Vaultwarden in a container.
+                The deployment also required reliable name resolution,
+                certificate trust and a reverse proxy while avoiding unnecessary
+                public exposure of the service.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">ARCHITECTURE</p>
+            <h2>Private DNS meets private PKI.</h2>
+
+            <div class="design-flow">
+
+                <div>
+                    <strong>Client</strong>
+                    <span>Browser · Password Manager</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>Pi-hole DNS</strong>
+                    <span>Private hostname resolution</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>Caddy</strong>
+                    <span>TLS · Reverse Proxy</span>
+                </div>
+
+            </div>
+
+            <div class="design-flow">
+
+                <div>
+                    <strong>Caddy</strong>
+                    <span>Trusted HTTPS endpoint</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>Vaultwarden</strong>
+                    <span>Docker container</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>Persistent Data</strong>
+                    <span>Vault database & configuration</span>
+                </div>
+
+            </div>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">IMPLEMENTATION</p>
+            <h2>Building the trust chain.</h2>
+
+            <div class="feature-list">
+
+                <div class="feature">
+                    <span>01</span>
+                    <div>
+                        <h3>Containerized application</h3>
+                        <p>
+                            Vaultwarden runs as a Docker container with
+                            persistent application data separated from the
+                            container lifecycle.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>02</span>
+                    <div>
+                        <h3>Private DNS</h3>
+                        <p>
+                            Pi-hole provides local DNS resolution so clients can
+                            reach the service through a stable private hostname
+                            rather than relying on a raw IP address.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>03</span>
+                    <div>
+                        <h3>Reverse proxy</h3>
+                        <p>
+                            Caddy terminates HTTPS and proxies requests to the
+                            Vaultwarden container, keeping TLS configuration
+                            separate from the application itself.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>04</span>
+                    <div>
+                        <h3>Internal certificate authority</h3>
+                        <p>
+                            Caddy's internal PKI provides certificates for the
+                            private service. The root certificate is trusted on
+                            authorized client devices so browsers and
+                            applications can validate the connection normally.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>05</span>
+                    <div>
+                        <h3>Restricted registration</h3>
+                        <p>
+                            Public account registration is disabled after the
+                            required vault account was configured.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>06</span>
+                    <div>
+                        <h3>Independent backups</h3>
+                        <p>
+                            Vaultwarden's persistent data is incorporated into
+                            the homelab backup system, including a consistent
+                            SQLite database snapshot and integrity verification.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">TROUBLESHOOTING</p>
+            <h2>HTTPS working isn't the same as HTTPS being trusted.</h2>
+
+            <p>
+                During deployment I encountered certificate trust problems
+                across different clients. This required separating several
+                concepts that initially looked like one problem: certificate
+                generation, server-side TLS configuration, hostname resolution
+                and client-side trust.
+            </p>
+
+            <p>
+                I verified DNS resolution independently, checked the reverse
+                proxy configuration and installed the internal CA certificate
+                on authorized clients. I also encountered a client import issue
+                caused by mismatched certificate and key material, which helped
+                reinforce the distinction between a server's private key,
+                leaf certificate and CA trust certificate.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">SECURITY DECISIONS</p>
+            <h2>Expose only what needs to be exposed.</h2>
+
+            <p>
+                The password manager is intended as a private service rather
+                than a public website. Internal DNS and locally trusted
+                certificates provide a usable HTTPS endpoint without requiring
+                the application itself to be directly published to the
+                internet.
+            </p>
+
+            <p>
+                Credentials, private keys, authentication secrets and internal
+                addressing are deliberately excluded from this portfolio and
+                its public repository.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">WHAT I LEARNED</p>
+            <h2>TLS is a chain, not a checkbox.</h2>
+
+            <p>
+                This project gave me practical experience with the relationship
+                between DNS, TLS certificates, certificate authorities, reverse
+                proxies and application containers.
+            </p>
+
+            <p>
+                More importantly, troubleshooting the deployment taught me to
+                isolate each layer independently rather than treating
+                “the website isn't secure” as a single problem.
+            </p>
+        </article>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+    <p>Built and maintained by Emma.</p>
+    <a href="https://github.com/emma-dep">github.com/emma-dep</a>
+</footer>
+
+</body>
+</html>

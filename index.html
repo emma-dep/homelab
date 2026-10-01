@@ -132,7 +132,103 @@
 
         </section>
 
+<!-- Architecture -->
+<section class="section architecture" id="architecture">
 
+    <div class="section-heading">
+        <p class="eyebrow">ARCHITECTURE</p>
+        <h2>How it fits together.</h2>
+
+        <p>
+            Core services, monitoring and workstation workloads are separated
+            across multiple Linux systems, with independent monitoring and
+            automated failure notifications.
+        </p>
+    </div>
+
+    <div class="architecture-map">
+
+        <div class="network-node network">
+            <span class="node-label">NETWORK</span>
+            <strong>Home Network</strong>
+            <small>DNS · LAN · Service Discovery</small>
+        </div>
+
+        <div class="architecture-line vertical"></div>
+
+        <div class="host-row">
+
+            <div class="architecture-host">
+                <span class="status-dot"></span>
+                <span class="node-label">CORE SERVICES</span>
+
+                <h3>Pandora</h3>
+                <p>Linux Mint</p>
+
+                <div class="service-tags">
+                    <span>Jellyfin</span>
+                    <span>Pi-hole</span>
+                    <span>Vaultwarden</span>
+                    <span>Caddy</span>
+                    <span>Home Assistant</span>
+                    <span>Whisper</span>
+                    <span>Piper</span>
+                </div>
+            </div>
+
+            <div class="architecture-host featured-host">
+                <span class="status-dot"></span>
+                <span class="node-label">MONITORING</span>
+
+                <h3>Demeter</h3>
+                <p>Debian</p>
+
+                <div class="service-tags">
+                    <span>Uptime Kuma</span>
+                    <span>ntfy</span>
+                    <span>Docker</span>
+                </div>
+
+                <div class="monitoring-note">
+                    Monitors infrastructure and delivers
+                    service & backup alerts.
+                </div>
+            </div>
+
+            <div class="architecture-host">
+                <span class="status-dot"></span>
+                <span class="node-label">WORKSTATION</span>
+
+                <h3>Artemis</h3>
+                <p>Fedora</p>
+
+                <div class="service-tags">
+                    <span>Sonarr</span>
+                    <span>Prowlarr</span>
+                    <span>qBittorrent</span>
+                    <span>FlareSolverr</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="architecture-flow">
+            <span>services</span>
+            <div class="flow-line"></div>
+            <span>monitoring</span>
+            <div class="flow-line"></div>
+            <span>alerting</span>
+        </div>
+
+        <div class="alert-node">
+            <span class="node-label">ALERT DESTINATION</span>
+            <strong>Mobile Notifications</strong>
+            <small>Authenticated ntfy push alerts</small>
+        </div>
+
+    </div>
+
+</section>
         <!-- Projects -->
         <section class="section" id="projects">
 
@@ -149,7 +245,7 @@
 
             <div class="project-grid">
 
-                <article class="project-card">
+                <a class="project-card" href="projects/disaster-recovery.html">
                     <p class="project-number">01</p>
                     <h3>Backup & Disaster Recovery</h3>
 
@@ -160,7 +256,7 @@
                     </p>
 
                     <span>Linux · Bash · systemd · SQLite</span>
-                </article>
+                </a>
 
 
                 <article class="project-card">

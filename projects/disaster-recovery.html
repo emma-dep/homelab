@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Backup and disaster recovery architecture for Emma's Linux homelab."
+    >
+
+    <title>Backup & Disaster Recovery // Emma's Homelab</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <a class="logo" href="../index.html">EMMA // HOMELAB</a>
+
+        <div class="nav-links">
+            <a href="../index.html#infrastructure">Infrastructure</a>
+            <a href="../index.html#projects">Projects</a>
+            <a href="https://github.com/emma-dep">GitHub</a>
+        </div>
+    </nav>
+</header>
+
+
+<main>
+
+    <section class="case-hero">
+
+        <a class="back-link" href="../index.html#projects">
+            ← Back to projects
+        </a>
+
+        <p class="eyebrow">CASE STUDY 01</p>
+
+        <h1>Backup &<br>Disaster Recovery</h1>
+
+        <p class="case-intro">
+            A service-aware backup system for critical homelab infrastructure,
+            built with Bash, systemd and SQLite and backed by automatic
+            failure notifications.
+        </p>
+
+        <div class="case-tags">
+            <span>Linux</span>
+            <span>Bash</span>
+            <span>systemd</span>
+            <span>SQLite</span>
+            <span>rsync</span>
+            <span>ntfy</span>
+        </div>
+
+    </section>
+
+
+    <section class="case-content">
+
+        <article class="case-section">
+            <p class="eyebrow">THE PROBLEM</p>
+            <h2>Backups needed to survive more than a file deletion.</h2>
+
+            <p>
+                Several important services run on Pandora, including
+                Vaultwarden, Pi-hole, Jellyfin and Home Assistant. Losing the
+                server's internal drive could therefore mean losing service
+                configuration, application databases and automation state.
+            </p>
+
+            <p>
+                Simply copying directories was not enough. Several applications
+                use active SQLite databases, backups should not silently write
+                to the wrong filesystem if the backup disk is unavailable, and
+                failures needed to be visible rather than discovered during an
+                actual recovery.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">DESIGN</p>
+            <h2>Service-aware snapshots.</h2>
+
+            <p>
+                A dedicated external SSD is mounted as the backup target.
+                Individual backup scripts handle each service independently,
+                allowing each application to be backed up according to its own
+                requirements.
+            </p>
+
+            <div class="design-flow">
+                <div>
+                    <strong>Services</strong>
+                    <span>Vaultwarden · Pi-hole · Jellyfin · Home Assistant</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>Backup Scripts</strong>
+                    <span>Bash · rsync · SQLite</span>
+                </div>
+
+                <b>→</b>
+
+                <div>
+                    <strong>Backup SSD</strong>
+                    <span>Timestamped snapshots</span>
+                </div>
+            </div>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">IMPLEMENTATION</p>
+            <h2>Designed around failure conditions.</h2>
+
+            <div class="feature-list">
+
+                <div class="feature">
+                    <span>01</span>
+                    <div>
+                        <h3>Mount-point protection</h3>
+                        <p>
+                            Backup scripts verify that the dedicated backup
+                            filesystem is mounted before writing data, preventing
+                            backups from accidentally filling the server's root
+                            filesystem when the external disk is unavailable.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>02</span>
+                    <div>
+                        <h3>Consistent SQLite backups</h3>
+                        <p>
+                            Active databases are copied using SQLite's backup
+                            mechanism instead of blindly copying live database
+                            files.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>03</span>
+                    <div>
+                        <h3>Integrity verification</h3>
+                        <p>
+                            Database snapshots are checked with SQLite integrity
+                            checks before the backup job is considered successful.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>04</span>
+                    <div>
+                        <h3>Automatic scheduling</h3>
+                        <p>
+                            systemd timers execute backups automatically with
+                            persistent scheduling so missed runs can execute
+                            after the system becomes available again.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>05</span>
+                    <div>
+                        <h3>Retention management</h3>
+                        <p>
+                            Timestamped snapshots are automatically rotated using
+                            a defined retention period rather than accumulating
+                            indefinitely.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <span>06</span>
+                    <div>
+                        <h3>Failure notifications</h3>
+                        <p>
+                            Failed systemd backup units trigger an independent
+                            notification path through ntfy running on another
+                            server, delivering an alert to my phone.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">VALIDATION</p>
+            <h2>Testing the unhappy path.</h2>
+
+            <p>
+                The notification chain was tested using a deliberately failing
+                disposable systemd service. This verified that a unit failure
+                triggered the OnFailure dependency, executed the notification
+                service and successfully delivered the alert.
+            </p>
+
+            <p>
+                Backup jobs were also run manually during setup and their
+                resulting snapshots and database integrity checks were verified
+                before relying on scheduled execution.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">LIMITATIONS & NEXT STEPS</p>
+            <h2>A backup isn't finished until recovery is understood.</h2>
+
+            <p>
+                The current system protects against common local failures but
+                does not yet constitute a complete 3-2-1 backup strategy. The
+                backup SSD remains physically located with the server and is
+                currently unencrypted.
+            </p>
+
+            <p>
+                Planned improvements include documented restore procedures,
+                periodic restore testing, encryption at rest and eventually an
+                additional off-site copy.
+            </p>
+        </article>
+
+
+        <article class="case-section">
+            <p class="eyebrow">WHAT I LEARNED</p>
+            <h2>Reliability means designing for what goes wrong.</h2>
+
+            <p>
+                This project moved my backup strategy beyond simply copying
+                files. It required thinking about database consistency,
+                filesystem state, permissions, scheduling, retention,
+                monitoring and how failures become visible.
+            </p>
+
+            <p>
+                It also reinforced an important operational lesson: a successful
+                backup job is only one part of disaster recovery. Restore
+                procedures and recovery testing are equally important.
+            </p>
+        </article>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+    <p>Built and maintained by Emma.</p>
+    <a href="https://github.com/emma-dep">github.com/emma-dep</a>
+</footer>
+
+</body>
+</html>
